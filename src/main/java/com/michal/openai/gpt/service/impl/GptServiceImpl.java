@@ -257,7 +257,7 @@ public class GptServiceImpl implements GptService {
 
         if (requestMessage.getToolCallId() == null
                 && requestMessage.getToolCalls() == null
-                && requestMessage.getRole().equals("tool")) {
+                && !requestMessage.getRole().equals("tool")) {
 
             requestDto = messageCnv.requestEntityToDto(requestMessage, slackUserRequestAuthor);
             requestDtoRepo.save(requestDto);

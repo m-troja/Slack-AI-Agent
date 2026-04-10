@@ -13,7 +13,6 @@ import com.slack.api.methods.request.users.UsersListRequest;
 import com.slack.api.methods.response.users.UsersListResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -46,7 +45,7 @@ public class SlackServiceImpl implements SlackService {
     }
 
     @Override
-    public String processOnMentionEvent(String requestBody) {
+    public SlackRequest parseSlackRequest(String requestBody) {
 
         SlackRequest slackRequest;
 
@@ -55,17 +54,12 @@ public class SlackServiceImpl implements SlackService {
         }
         catch (JsonProcessingException e) {
             log.error("Cannot parse Slack request", e);
-            return "error";
+            return null;
         }
 
-        String slackUserId = slackRequest.event().user();
-        String text = slackRequest.event().text();
+        checkSlackUserInDb(slackRequest.event().user());
 
-        checkSlackUserInDb(slackUserId);
-
-        log.debug("Slack message from {}: {}", slackUserId, text);
-
-        return slackUserId;
+        return slackRequest;
     }
 
     private void checkSlackUserInDb(String slackUserId) {

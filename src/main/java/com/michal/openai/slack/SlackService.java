@@ -1,12 +1,13 @@
 package com.michal.openai.slack;
 
+import com.michal.openai.slack.entity.SlackRequest;
 import com.michal.openai.slack.entity.SlackUser;
 
 import java.util.List;
 
 public interface SlackService {
 
-    String processOnMentionEvent(String requestBody);
+    SlackRequest parseSlackRequest(String requestBody);
 
     String registerUser(SlackUser user);
 
