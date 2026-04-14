@@ -1,9 +1,0 @@
-{
-  "id" : 0,
-  "content" : "finished",
-  "userSlackId" : "U123",
-  "realUserName" : null,
-  "role" : "assistant",
-  "requestDto" : null,
-  "timestamp" : null
-}
