@@ -33,14 +33,14 @@ jobs:
             cd ${{ secrets.WORK_DIR }} &&
 
             cat > .env <<EOF
-            CHAT_DB_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
-            GPT_CHAT_API_KEY=${{ secrets.GPT_CHAT_API_KEY }}
-            TS_BOT_PW=${{ secrets.TS_BOT_PW }}
-            SLACK_CHANNEL_ID=${{ secrets.SLACK_CHANNEL_ID }}
-            SLACK_BOT_OAUTH_TOKEN=${{ secrets.SLACK_BOT_OAUTH_TOKEN }}
-            JIRA_KEY=${{ secrets.JIRA_KEY }}
-            GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
-            EOF
+CHAT_DB_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
+GPT_CHAT_API_KEY=${{ secrets.GPT_CHAT_API_KEY }}
+TS_BOT_PW=${{ secrets.TS_BOT_PW }}
+SLACK_CHANNEL_ID=${{ secrets.SLACK_CHANNEL_ID }}
+SLACK_BOT_OAUTH_TOKEN=${{ secrets.SLACK_BOT_OAUTH_TOKEN }}
+JIRA_KEY=${{ secrets.JIRA_KEY }}
+GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
+EOF
 
             docker compose down
             docker compose up -d --build
