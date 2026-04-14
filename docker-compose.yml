@@ -49,3 +49,6 @@ services:
       CHAT_ALLOW_FUNCTION_getAllTaskSystemIssuesTool: 0
       CHAT_ALLOW_FUNCTION_getAllJiraIssuesTool: 1
       CHAT_ALLOW_FUNCTION_githubGetReposTool: 0
+
+    volumes:
+      - /var/log/slackagent:/var/log
