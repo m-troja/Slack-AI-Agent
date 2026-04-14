@@ -8,7 +8,7 @@ import org.springframework.web.client.RestClient;
 @Configuration
 public class  RestClientConfig {
 
-    @Value("${GITHUB_TOKEN}")
+    @Value("${TOKEN_GITHUB}")
     private String githubToken;
     @Value("${github.api.url}")
     private String githubBaseApiUrl;
