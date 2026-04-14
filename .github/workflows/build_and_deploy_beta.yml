@@ -27,36 +27,36 @@ jobs:
             ./ \
             ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.WORK_DIR }}/
 
-  - name: Create .env and start containers
-    run: |
-      ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "
-        cd ${{ secrets.WORK_DIR }} &&
-
-  - name: Create .env and start containers
-    run: |
-      ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "
-        cd ${{ secrets.WORK_DIR }} &&
-      
-        printf '%s\n' \
-          'CHAT_DB_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}' \
-          'GPT_CHAT_API_KEY=${{ secrets.GPT_CHAT_API_KEY }}' \
-          'TS_BOT_PW=${{ secrets.TS_BOT_PW }}' \
-          'SLACK_CHANNEL_ID=${{ secrets.SLACK_CHANNEL_ID }}' \
-          'SLACK_BOT_OAUTH_TOKEN=${{ secrets.SLACK_BOT_OAUTH_TOKEN }}' \
-          'JIRA_KEY=${{ secrets.JIRA_KEY }}' \
-          'GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}' \
-          > .env &&
-      
-        docker compose down
-        docker compose up -d --build
-      "
-      
-      - name: Show containers
+      - name: Create .env and start containers
         run: |
           ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "
-            docker ps
-          "
+            cd ${{ secrets.WORK_DIR }} &&
 
-      - name: Cleanup SSH
-        if: always()
-        run: rm -rf ~/.ssh
+      - name: Create .env and start containers
+        run: |
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "
+            cd ${{ secrets.WORK_DIR }} &&
+          
+            printf '%s\n' \
+              'CHAT_DB_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}' \
+              'GPT_CHAT_API_KEY=${{ secrets.GPT_CHAT_API_KEY }}' \
+              'TS_BOT_PW=${{ secrets.TS_BOT_PW }}' \
+              'SLACK_CHANNEL_ID=${{ secrets.SLACK_CHANNEL_ID }}' \
+              'SLACK_BOT_OAUTH_TOKEN=${{ secrets.SLACK_BOT_OAUTH_TOKEN }}' \
+              'JIRA_KEY=${{ secrets.JIRA_KEY }}' \
+              'GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}' \
+              > .env &&
+          
+            docker compose down
+            docker compose up -d --build
+          "
+          
+          - name: Show containers
+            run: |
+              ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "
+                docker ps
+              "
+    
+          - name: Cleanup SSH
+            if: always()
+            run: rm -rf ~/.ssh
