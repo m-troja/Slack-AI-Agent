@@ -51,4 +51,4 @@ services:
       CHAT_ALLOW_FUNCTION_githubGetReposTool: 0
 
     volumes:
-      - /var/log/slackagent:/var/log
+      - /var/log/slackagent:/var/log:Z
