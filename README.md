@@ -28,19 +28,29 @@
 ## Requirements
 
 - public static IP address
-- OpenAI account and API token
 - Jira account and API token
+- OpenAI dev account and API token
 - Slack account and API token, SlackBot installed into workspace
+
 
 ## Config
 
-Requires env vars config in ```.env.example```.
+Token config in src/main/resources/secrets.properties:
+
+- gpt.chat.api.key=
+- slack.bot.oauth.token=
+- jira.key=
 
 
-## Logging
+## Personalization with env vars
 
 App saves incoming and outgoing JSON files. Env variables needed to configure file path:
 
-CHAT_LOG_DIR=C:\\tmp\\log
-CHAT_JSON_DIR=C:\\tmp\\JSON
-CHAT_LOG_FILENAME=chatgpt
+- CHAT_LOG_DIR=
+- CHAT_JSON_DIR=
+- CHAT_LOG_FILENAME=chatgpt
+
+System message to personalize AI experience:
+
+
+OpenAI model configuration:
