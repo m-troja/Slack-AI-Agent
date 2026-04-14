@@ -35,7 +35,7 @@ jobs:
             cd ${{ secrets.WORK_DIR_DOCKER }}
 
             printf '%s\n' \
-              "CHAT_DB_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" \
+              "CHAT_DB_PASSWORD=${{ secrets.CHAT_DB_PASSWORD }}" \
               "GPT_CHAT_API_KEY=${{ secrets.GPT_CHAT_API_KEY }}" \
               "TS_BOT_PW=${{ secrets.TS_BOT_PW }}" \
               "SLACK_CHANNEL_ID=${{ secrets.SLACK_CHANNEL_ID }}" \
