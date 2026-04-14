@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class BeansConfiguration {
 
-	@Value("${slack.bot.oauth.token}")
+	@Value("${SLACK_BOT_OAUTH_TOKEN}")
 	private String slackSecurityTokenBot ;
 
     @Bean("slackBotClient")

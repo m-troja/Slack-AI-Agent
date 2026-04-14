@@ -30,7 +30,7 @@ public class AdminController {
 	@Transactional
 	public String clearDatabase()
 	{
-        log.info("GET /admin/clear-database");
+        log.info("GET /api/v1/admin/clear-database");
         gptService.clearDatabase();
 
 		return "Cleared database";

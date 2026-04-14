@@ -1,0 +1,25 @@
+{
+  "model" : "gpt-5.1",
+  "messages" : [ {
+    "content" : "Hi You received message from U123. Type <@U123> to mention them.",
+    "tool_calls" : null,
+    "name" : null,
+    "role" : "system",
+    "tool_call_id" : null
+  }, {
+    "content" : "query",
+    "tool_calls" : null,
+    "name" : null,
+    "role" : "user",
+    "tool_call_id" : null
+  } ],
+  "n" : null,
+  "temperature" : 0.7,
+  "stop" : null,
+  "tools" : [ ],
+  "stream" : false,
+  "max_completion_tokens" : 100,
+  "top_p" : null,
+  "logit_bias" : null,
+  "tool_choice" : null
+}
