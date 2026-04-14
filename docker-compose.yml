@@ -1,16 +1,4 @@
 services:
-  db:
-    image: postgres:16
-    container_name: slack-ai-agent-db
-    restart: always
-    environment:
-      POSTGRES_DB: chatgpt-integration
-      POSTGRES_USER: chatgpt
-      POSTGRES_PASSWORD: ${CHAT_DB_PASSWORD}
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
 
   app:
     env_file:
@@ -20,22 +8,21 @@ services:
       dockerfile: Dockerfile
     container_name: slack-ai-agent-app
     restart: always
-    depends_on:
-      - db
+
     ports:
       - "6969:6969"
     environment:
-      CHAT_LOG_DIR: /var/log
-      CHAT_JSON_DIR: /var/log
-      CHAT_LOG_FILENAME: chatgpt
+      CHAT_LOG_DIR: ${CHAT_LOG_DIR}
+      CHAT_JSON_DIR: ${CHAT_JSON_DIR}
+      CHAT_LOG_FILENAME: ${CHAT_LOG_FILENAME}
 
-      CHAT_SERVER_ADDRESS: 0.0.0.0
-      CHAT_SERVER_PORT: 6969
+      CHAT_SERVER_ADDRESS: ${CHAT_SERVER_ADDRESS}
+      CHAT_SERVER_PORT: ${CHAT_SERVER_PORT}
 
-      CHAT_DB_HOST: db
-      CHAT_DB_NAME: chatgpt-integration
-      CHAT_DB_PORT: 5432
-      CHAT_DB_USERNAME: chatgpt
+      CHAT_DB_HOST: ${CHAT_DB_HOST}
+      CHAT_DB_NAME: ${CHAT_DB_NAME}
+      CHAT_DB_PORT: ${CHAT_DB_PORT}
+      CHAT_DB_USERNAME: ${CHAT_DB_USERNAME}
       CHAT_DB_PASSWORD: ${CHAT_DB_PASSWORD}
 
       CHAT_MODEL: gpt-5.1
@@ -44,8 +31,8 @@ services:
       GPT_CHAT_API_KEY: ${GPT_CHAT_API_KEY}
       GPT_CHAT_SYSTEM_INITIAL_MESSAGE: Always mention user when responding. If i ask you to mention all, type <!channel>. You are very friendly slack-ai-agent.
 
-      TS_HOST: taskstorm
-      TS_HTTP_PORT: 6901
+      TS_HOST: ${TS_HOST}
+      TS_HTTP_PORT: ${TS_HTTP_PORT}
       TS_BOT_EMAIL: test@test.com
       TS_BOT_PW: ${TS_BOT_PW}
       TS_BOT_SLACK_USER_ID: USLACKBOT
@@ -62,6 +49,3 @@ services:
       CHAT_ALLOW_FUNCTION_getAllTaskSystemIssuesTool: 0
       CHAT_ALLOW_FUNCTION_getAllJiraIssuesTool: 1
       CHAT_ALLOW_FUNCTION_githubGetReposTool: 0
-
-volumes:
-  postgres_data:
