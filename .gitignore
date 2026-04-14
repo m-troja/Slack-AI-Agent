@@ -23,3 +23,6 @@ src/main/resources/secrets.properties
 *.jar
 logs/*
 Dockerfile
+
+build/
+target/
