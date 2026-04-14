@@ -27,9 +27,6 @@ class SlackRestControllerTest {
     private MockMvc mockMvc;
 
     @MockitoBean
-    private SlackService slackService;
-
-    @MockitoBean
     private SlackGptCoordinator slackGptCoordinator;
 
     private String slackRequest;

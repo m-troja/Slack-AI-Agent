@@ -22,4 +22,6 @@ src/main/resources/secrets.properties
 *.exe
 *.jar
 logs/*
-Dockerfile
+
+build/
+target/

@@ -26,7 +26,7 @@ public class RequestDto {
 
     public RequestDto() {}
 
-    public RequestDto(String userSlackId, String realName, String role, String content) {
+    public RequestDto(String content, String userSlackId, String realName, String role) {
         this.userSlackId = userSlackId;
         this.realName = realName;
         this.role = role;

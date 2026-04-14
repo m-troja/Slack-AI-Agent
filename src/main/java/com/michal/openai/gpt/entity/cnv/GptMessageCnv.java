@@ -10,11 +10,15 @@ import lombok.extern.slf4j.Slf4j;
 public class GptMessageCnv {
 
     public RequestDto requestEntityToDto(GptMessage gptMessage, SlackUser slackUserRequestAuthor) {
+        log.debug("GPTMessage: {}", gptMessage);
+        log.debug("gptMessage.toString: {}", gptMessage.toString());
+        log.debug("gptMessage.getContent: {}", gptMessage.getContent());
+
         var dto = new RequestDto(
+                gptMessage.getContent(),
                 slackUserRequestAuthor.getSlackUserId(),
                 slackUserRequestAuthor.getSlackName(),
-                gptMessage.getRole(),
-                gptMessage.getContent()
+                gptMessage.getRole()
         );
         log.debug("Converted requestDto: {}", dto);
         return dto;

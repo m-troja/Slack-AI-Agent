@@ -1,6 +1,7 @@
 package com.michal.openai.controllers;
 
 import com.michal.openai.gpt.service.GptService;
+import com.michal.openai.gpt.tool.registry.GptToolRegistry;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -19,6 +20,7 @@ class AdminControllerTest {
     @Autowired private MockMvc mockMvc;
 
     @MockitoBean private GptService gptService;
+    @MockitoBean private GptToolRegistry gptToolRegistry;
 
     @Test
     void shouldReturnOkOnClearDatabase() throws Exception {

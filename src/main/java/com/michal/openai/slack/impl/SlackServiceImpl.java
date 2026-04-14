@@ -11,6 +11,7 @@ import com.slack.api.methods.SlackApiException;
 import com.slack.api.methods.request.chat.ChatPostMessageRequest;
 import com.slack.api.methods.request.users.UsersListRequest;
 import com.slack.api.methods.response.users.UsersListResponse;
+import io.swagger.v3.core.util.Json;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Async;
@@ -29,6 +30,7 @@ public class SlackServiceImpl implements SlackService {
     private final ObjectMapper objectMapper;
     private final SlackRepo slackRepo;
     private final String slackChannelId;
+    private static String appMentionType = "app_mention";
 
     public SlackServiceImpl(
             @Qualifier("slackBotClient") MethodsClient slackBotClient,
@@ -46,7 +48,7 @@ public class SlackServiceImpl implements SlackService {
     }
 
     @Override
-    public String processOnMentionEvent(String requestBody) {
+    public SlackRequest parseSlackRequest(String requestBody) {
 
         SlackRequest slackRequest;
 
@@ -55,17 +57,24 @@ public class SlackServiceImpl implements SlackService {
         }
         catch (JsonProcessingException e) {
             log.error("Cannot parse Slack request", e);
-            return "error";
+            return null;
         }
 
         String slackUserId = slackRequest.event().user();
+        if (!slackRequest.event().type().equals(appMentionType))
+        {
+            log.error("Slack request event type is not {}", appMentionType);
+        }
+        else {
+            log.debug("Slack request event type = {}", appMentionType);
+        }
         String text = slackRequest.event().text();
 
         checkSlackUserInDb(slackUserId);
 
         log.debug("Slack message from {}: {}", slackUserId, text);
 
-        return slackUserId;
+        return slackRequest;
     }
 
     private void checkSlackUserInDb(String slackUserId) {

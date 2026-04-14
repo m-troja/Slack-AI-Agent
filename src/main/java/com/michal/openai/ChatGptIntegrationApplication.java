@@ -11,8 +11,7 @@ import java.util.Map;
 @EnableAsync(proxyTargetClass = true)
 @SpringBootApplication
 @PropertySources({
-	@PropertySource("classpath:application.properties") ,
-	@PropertySource("classpath:secrets.properties")
+	@PropertySource("classpath:application.properties")
 	})
 public class ChatGptIntegrationApplication {
 

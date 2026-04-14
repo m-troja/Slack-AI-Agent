@@ -8,15 +8,15 @@ import org.springframework.web.client.RestClient;
 @Configuration
 public class  RestClientConfig {
 
-    @Value("${github.token}")
+    @Value("${TOKEN_GITHUB}")
     private String githubToken;
     @Value("${github.api.url}")
     private String githubBaseApiUrl;
-	@Value("${gpt.chat.api.key}")
+	@Value("${GPT_CHAT_API_KEY}")
 	private String chatGptApiKey;
 	@Value("${gpt.chat.api.url}")
 	private String chatGptApiUrl;
-    @Value("${jira.key}")
+    @Value("${JIRA_KEY}")
     private String jiraKey;
     @Value("${jira.url}")
     private String jiraUrl;
