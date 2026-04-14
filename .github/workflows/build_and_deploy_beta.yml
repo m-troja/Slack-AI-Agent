@@ -41,7 +41,7 @@ jobs:
               "SLACK_CHANNEL_ID=${{ secrets.SLACK_CHANNEL_ID }}" \
               "SLACK_BOT_OAUTH_TOKEN=${{ secrets.SLACK_BOT_OAUTH_TOKEN }}" \
               "JIRA_KEY=${{ secrets.JIRA_KEY }}" \
-              "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" \
+              "TOKEN_GITHUB=${{ secrets.TOKEN_GITHUB }}" \
               > .env
 
             docker compose down || true
