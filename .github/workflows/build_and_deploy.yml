@@ -1,78 +1,16 @@
-name: Build and Deploy Spring Boot App
+name: Build and Deploy Spring Boot App on Live server container
 
 on:
   push:
     branches: [ main ]
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
-        with:
-          fetch-depth: 0
-          clean: true
-          persist-credentials: false
-          fetch-tags: true
-          ref: main
-
-      - name: Ensure full Git history and tags for GitVersion
-        run: |
-          git fetch --prune --unshallow || true
-          git fetch --tags --force
-          echo "Git history depth: $(git rev-list --count HEAD)"
-          echo "Latest tag:"
-          git describe --tags --abbrev=0 || echo "No tags found"
-          git tag -l
-          
-      - name: Set up Maven 3.9.9
-        uses: s4u/setup-maven-action@v1.19.0
-        with:
-            maven-version: '3.9.9'
-            java-version: '21'
-
-      - name: Unshallow repo for GitVersion
-        run: |
-          git fetch --unshallow || echo "Already complete"
-          git fetch --tags
-          git config --global --add safe.directory "$GITHUB_WORKSPACE"
-
-      - name: Install GitVersion
-        uses: gittools/actions/gitversion/setup@v4
-        with:
-          versionSpec: '6.x'
-
-      - name: Run GitVersion
-        id: gitversion
-        uses: gittools/actions/gitversion/execute@v4
-        with:
-          targetPath: ${{ github.workspace }}
-          updateAssemblyInfo: false
-
-      - name: Update Maven version
-        run: |
-          mvn versions:set -DnewVersion=${{ steps.gitversion.outputs.fullSemVer }}
-          mvn versions:commit
-
-      - name: Set up Java 21
-        uses: actions/setup-java@v5
-        with:
-          distribution: temurin
-          java-version: '21'
-          cache: maven
-          cache-dependency-path: '**/pom.xml'
-      - name: Check Java version
-        run: java -version
-
-      - name: Create secrets.properties
-        run: |
-          echo "${{ secrets.SECRETS_PROPERTIES_CONTENT }}" > src/main/resources/secrets.properties
-          echo "secrets.properties created"
-      
-      - name: Build with Maven
-        run: mvn -B clean package -DskipTests -Dmaven.compiler.showDeprecation=true -Djava.compiler.args="--enable-preview"
 
       - name: Prepare SSH
         run: |
@@ -81,22 +19,52 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H "${{ secrets.SSH_HOST }}" >> ~/.ssh/known_hosts
 
-      - name: Deploy build via rsync
+      - name: Sync project to server
         run: |
-          VERSION=${{ steps.gitversion.outputs.fullSemVer }}
-          BUILD_JAR=$(find target -name "*.jar" | head -n 1)
-          echo "Deploying version: $VERSION"
-          echo "Uploading $BUILD_JAR"
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "
-            mkdir -p '${{ secrets.WORK_DIR }}/$VERSION';
-            ln -sfn '$VERSION' '${{ secrets.WORK_DIR }}/latest';
-          "
-          rsync -avz "$BUILD_JAR" ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.WORK_DIR }}/$VERSION/
+          rsync -avz --delete \
+            --exclude ".git" \
+            --exclude "target" \
+            ./ \
+            ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.WORK_DIR_DOCKER }}/
 
-      - name: Restart app on server
+      - name: Deploy on server
         run: |
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
-            "sudo systemctl restart chatgpt.service"
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+            set -e
+
+            cd ${{ secrets.WORK_DIR_DOCKER }}
+
+            printf '%s\n' \
+              "CHAT_DB_PASSWORD=${{ secrets.CHAT_DB_PASSWORD }}" \
+              "GPT_CHAT_API_KEY=${{ secrets.GPT_CHAT_API_KEY }}" \
+              "TS_BOT_PW=${{ secrets.TS_BOT_PW }}" \
+              "SLACK_CHANNEL_ID=${{ secrets.SLACK_CHANNEL_ID }}" \
+              "SLACK_BOT_OAUTH_TOKEN=${{ secrets.SLACK_BOT_OAUTH_TOKEN }}" \
+              "JIRA_KEY=${{ secrets.JIRA_KEY }}" \
+              "TOKEN_GITHUB=${{ secrets.TOKEN_GITHUB }}" \
+              "CHAT_DB_HOST=192.168.1.11" \
+              "CHAT_DB_NAME=chatgpt-integration" \
+              "CHAT_DB_PORT=5432" \
+              "CHAT_SERVER_ADDRESS=0.0.0.0" \
+              "CHAT_SERVER_PORT=6969" \
+              "TS_HOST=192.168.1.11" \
+              "TS_HTTP_PORT=6901" \
+              "CHAT_DB_USERNAME=chatgpt" \
+              "CHAT_LOG_DIR=/var/log" \
+              "CHAT_JSON_DIR=/var/json" \
+              "CHAT_LOG_FILENAME=chatgpt" \
+              > .env
+
+            docker compose down || true
+            docker compose up -d --build
+
+            docker ps
+          EOF
+
+      - name: Show containers
+        run: |
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "docker ps"
 
       - name: Cleanup SSH
+        if: always()
         run: rm -rf ~/.ssh
