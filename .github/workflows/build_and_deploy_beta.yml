@@ -32,7 +32,7 @@ jobs:
           ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
             set -e
 
-            cd ${{ secrets.WORK_DIR }}
+            cd ${{ secrets.WORK_DIR_DOCKER }}
 
             printf '%s\n' \
               "CHAT_DB_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" \
