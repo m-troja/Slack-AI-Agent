@@ -26,19 +26,19 @@ public class SlackGptCoordinator {
         try {
             var slackRequest = slackService.parseSlackRequest(requestBody);
             var text = slackRequest.event().text();
-            var textCleaned = cleanMention(text);
+//            var textCleaned = cleanMention(text);
             var slackUserId = slackRequest.event().user();
             var type = slackRequest.event().type();
-            log.debug("Parsed Slack message from {}: {}, type: {}", slackUserId, textCleaned , type);
-            String response = gptService.getAnswerWithSlack(textCleaned, slackUserId);
+            log.debug("Parsed Slack message from {}: {}, type: {}", slackUserId, text , type);
+            String response = gptService.getAnswerWithSlack(text, slackUserId);
             slackService.sendMessageToSlack(response, slackChannelId);
         } catch (Exception e) {
             log.error("Error processing Slack mention asynchronously", e);
         }
     }
 
-    private String cleanMention(String query)
-    {
-        return query.replaceAll("<@.*?>", "").trim();
-    }
+//    private String cleanMention(String query)
+//    {
+//        return query.replaceAll("<@.*?>", "").trim();
+//    }
 }
